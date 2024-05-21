@@ -17,7 +17,7 @@ pub struct UIEdgeInsets {
 
 type MutObjPtr = *mut Object;
 
-fn safe_area() -> UIEdgeInsets {
+pub fn safe_area() -> UIEdgeInsets {
     if cfg!(target_os = "ios") {
         autoreleasepool(|| unsafe {
             let class = class!(UIApplication);
