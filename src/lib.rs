@@ -6,7 +6,7 @@ use objc::sel;
 use objc::sel_impl;
 
 
-#[derive(Debug,Default)]
+#[derive(Debug)]
 #[repr(C)]
 pub struct UIEdgeInsets {
     top: f64,
@@ -17,7 +17,7 @@ pub struct UIEdgeInsets {
 
 type MutObjPtr = *mut Object;
 
-pub fn safe_area() -> UIEdgeInsets {
+pub fn safe_area() -> Option<UIEdgeInsets> {
     if cfg!(target_os = "ios") {
         autoreleasepool(|| unsafe {
             let class = class!(UIApplication);
@@ -25,10 +25,10 @@ pub fn safe_area() -> UIEdgeInsets {
             let windows: MutObjPtr = msg_send![shared, windows];
             let first_window: MutObjPtr = msg_send![windows, firstObject];
             let area_insets: UIEdgeInsets = msg_send![first_window, safeAreaInsets];
-            area_insets
+            Some(area_insets)
         })
     } else {
-        UIEdgeInsets::default()
+        None
     }
 }
 
